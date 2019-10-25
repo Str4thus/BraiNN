@@ -16,8 +16,6 @@ class ToolBox {
     static select(clazz, options = null) {
         let nextTool = clazz ? new (clazz)(options) : new HandTool(options);
         currentTool = nextTool;
-
-        console.log(nextTool);
     }
 }
 
@@ -34,6 +32,8 @@ class NeuronTool extends Tool {
         super();
         this.neuronType = options["neuronType"];
         this.neuronClass = this.getNeuronClass();
+
+        noCursor();
     }
 
     display() {
@@ -69,12 +69,14 @@ class NeuronTool extends Tool {
 class ConnectionTool extends Tool {
     constructor(options) {
         super();
+        cursor(CROSS);
     }
 }
 
 class HandTool extends Tool {
     constructor(options) {
         super();
+        cursor(ARROW);
     }
 }
 // ----------

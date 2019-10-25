@@ -82,17 +82,17 @@ function setup() {
 
 function draw() {
     background(195, 212, 229);
-
+    
     // Input
 
 
     // Update
-    
+
     // Display
     for (let i = 0; i < neurons.length; i++) {
         neurons[i].display();
     }
-    
+
     currentTool.display();
 }
 // ---------------
