@@ -1,0 +1,30 @@
+#appWrapper {
+    margin-left: 2vw;
+    margin-top: 1vh;
+
+    width: 96vw;
+    height: 82vh;
+}
+
+#toolbox-toggle {
+    background-color: #343a40;
+    width: 100%;
+    height: 5%;
+}
+
+#toolbox-toggle-button {
+    color: white;
+    width: 100%;
+    height: 100%;
+}
+
+#toolbox {
+    margin-top: .5vw;
+    margin-left: 3.5vw;
+    margin-right: 2vw;
+}
+
+.btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none;
+}
