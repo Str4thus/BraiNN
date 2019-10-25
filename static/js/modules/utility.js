@@ -3,7 +3,10 @@ console.log("Utility Module loaded");
 // -------------------------------
 // -  General Utility Functions  -
 // -------------------------------
-
+let lastID = -1;
+function getNextID() {
+    return ++lastID;
+}
 
 // --------------------------
 // -  p5 Utility Functions  -
@@ -28,3 +31,31 @@ function fitToContainer(canvas) {
 // ------------------------------
 // -  Neuron Utility Functions  -
 // ------------------------------
+let bufferDistance = 4;
+function isMouseOverNeuron() {
+    for (let i = 0; i < neurons.length; i++) {
+        if (dist(neurons[i].getX(), neurons[i].getY(), mouseX, mouseY) < (2 * neuronRadius + bufferDistance)) {
+            return true;
+        }
+    }
+}
+
+function getHoveredNeuron() {
+    let hoveredNeuron = null;
+    for (let i = 0; i < neurons.length; i++) {
+        if (dist(neurons[i].getX(), neurons[i].getY(), mouseX, mouseY) < neuronRadius) {
+            hoveredNeuron = neurons[i];
+            break;
+        }
+    }
+
+    return hoveredNeuron;
+}
+
+function connectionExisits(neuronA, neuronB) {
+    if (connectionDict[neuronA.id]) {
+        console.log(connectionDict);
+        return neuronB.id in connectionDict[neuronA.id];
+    }
+    return false;
+}

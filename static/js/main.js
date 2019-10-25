@@ -4,7 +4,8 @@ console.log("App started");
 // -  General  -
 // -------------
 let canvas;
-let neurons = []; // runs smooth with up to 3000 neurons
+let neurons = [];
+let connections = [];
 // -------------
 
 
@@ -22,7 +23,7 @@ let yoff = 0;
 // -  Mouse Handling  -
 // --------------------
 function mouseDragged(event) {
-    if (event.shiftKey) {
+    if (event.shiftKey) { // Scrolling for infinte workspace
         xoff += event.movementX;
         yoff += event.movementY;
     }
@@ -34,17 +35,14 @@ function mouseClicked(event) {
     let target = $(event.target)[0]
     if (target.id != "app") return true; // Prevent click handling by this method since the click was outside of the canvas 
 
-    try {
-        currentTool.handleClick(event);
-    } catch (e) {
-        // Currently selected tool does not provide the handle key method
-        console.error(e);
-    }
-
-
+    event.neuron = getHoveredNeuron(); // Neuron hovered during the click, can be null
     if (!event.shiftKey) {
-        //let neuronToAdd = new (getNeuronByType(activeType))(mouseX, mouseY, 20);
-        //neurons.push(neuronToAdd);
+        try {
+            currentTool.handleClick(event);
+        } catch (e) {
+            // Currently selected tool does not provide the handle key method
+            console.error(e);
+        }
     }
 
     return false;
@@ -82,18 +80,27 @@ function setup() {
 
 function draw() {
     background(195, 212, 229);
-    
-    // Input
+
+    // ----------
+    // - Update - 
+    // ----------
 
 
-    // Update
+    // -----------
+    // - Display - 
+    // -----------
+    if (currentTool.earlyDisplay) currentTool.display();
 
-    // Display
+    // Connections
+    for (let i = 0; i < connections.length; i++) {
+        connections[i].display();
+    }
+
+    // Neurons
     for (let i = 0; i < neurons.length; i++) {
         neurons[i].display();
     }
-
-    currentTool.display();
+    
+    if (!currentTool.earlyDisplay) currentTool.display();
 }
 // ---------------
-

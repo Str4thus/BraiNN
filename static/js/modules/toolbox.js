@@ -20,16 +20,21 @@ class ToolBox {
 }
 
 class Tool {
-    display() {}
+    constructor(options = {}) {
+        this.hovers = "hovers" in options ? options["hovers"] : true;
+        this.earlyDisplay = "earlyDisplay" in options ? options["earlyDisplay"] : false;
+    }
 
-    handleKey(key) {}
+    display() { }
 
-    handleClick(click) {}
+    handleKey(key) { }
+
+    handleClick(event) { }
 }
 
 class NeuronTool extends Tool {
     constructor(options) {
-        super();
+        super({ "hovers": false });
         this.neuronType = options["neuronType"];
         this.neuronClass = this.getNeuronClass();
 
@@ -41,12 +46,12 @@ class NeuronTool extends Tool {
         fill(c);
         strokeWeight(3);
         stroke(0);
-        
-        circle(mouseX, mouseY, neuronRadius);
+
+        circle(mouseX, mouseY, neuronRadius * 2);
     }
 
-    handleClick(click) {
-        if (!click.shiftKey) {
+    handleClick(event) {
+        if (!isMouseOverNeuron()) {
             let neuron = new (this.neuronClass)(mouseX - xoff, mouseY - yoff);
             neurons.push(neuron);
         }
@@ -68,8 +73,32 @@ class NeuronTool extends Tool {
 
 class ConnectionTool extends Tool {
     constructor(options) {
-        super();
+        super({ "earlyDisplay": true });
+
+        this.rootNeuron = null;
+
         cursor(CROSS);
+    }
+
+    display() {
+        if (this.rootNeuron) {
+            line(this.rootNeuron.getX(), this.rootNeuron.getY(), mouseX, mouseY);
+        }
+    }
+
+    handleClick(event) {
+        if (event.ctrlKey) { // Cancel
+            this.rootNeuron = null;
+        }
+
+        if (event.neuron) {
+            if (!this.rootNeuron) {
+                this.rootNeuron = event.neuron;
+            } else if (!connectionExisits(this.rootNeuron, event.neuron)) { // Create connection if the second neuron was clicked and prevent double connections
+                connections.push(new Connection(this.rootNeuron, event.neuron, 1)); // TODO change inital weight
+                this.rootNeuron = null;
+            }
+        }
     }
 }
 
