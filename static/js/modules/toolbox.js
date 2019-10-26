@@ -1,28 +1,13 @@
 console.log("ToolBox Module loaded");
 
-// ---------------
-// -  Variables  -
-// ---------------
-let currentTool = null;
-// ---------------
-
-
-
 
 // -----------
 // -  Tools  -
 // -----------
-class ToolBox {
-    static select(clazz, options = null) {
-        let nextTool = clazz ? new (clazz)(options) : new HandTool(options);
-        currentTool = nextTool;
-    }
-}
-
 class Tool {
     constructor(options = {}) {
-        this.hovers = "hovers" in options ? options["hovers"] : true;
-        this.earlyDisplay = "earlyDisplay" in options ? options["earlyDisplay"] : false;
+        this.hovers = options.hovers == undefined;
+        this.earlyDisplay = options.earlyDisplay != undefined;
     }
 
     display() { }
@@ -30,30 +15,38 @@ class Tool {
     handleKey(key) { }
 
     handleClick(event) { }
+
+    handleDrag(event) { }
 }
 
 class NeuronTool extends Tool {
-    constructor(options) {
-        super({ "hovers": false });
-        this.neuronType = options["neuronType"];
-        this.neuronClass = this.getNeuronClass();
+    constructor(options = {}) {
+        addDataToObject(options, {
+            hovers: false,
+        })
+        super(options);
+        this.neuronType = options.neuronType;
+        this.neuronClass = this.getNeuronClass(); // javascript Class
 
         noCursor();
     }
 
     display() {
-        let c = color(...neuronColors[this.neuronType], 150);
+        let c = color(...Neurons.colors[this.neuronType], 150);
         fill(c);
         strokeWeight(3);
         stroke(0);
 
-        circle(mouseX, mouseY, neuronRadius * 2);
+        circle(mouseX, mouseY, Neurons.neuronRadius * 2);
     }
 
     handleClick(event) {
         if (!isMouseOverNeuron()) {
-            let neuron = new (this.neuronClass)(mouseX - xoff, mouseY - yoff);
-            neurons.push(neuron);
+            let options = {
+                x: mouseX - xoff,
+                y: mouseY - yoff,
+            }
+            Neurons.add(this.neuronClass, options);
         }
     }
 
@@ -72,8 +65,11 @@ class NeuronTool extends Tool {
 }
 
 class ConnectionTool extends Tool {
-    constructor(options) {
-        super({ "earlyDisplay": true });
+    constructor(options = {}) {
+        addDataToObject(options, {
+            earlyDisplay: true,
+        })
+        super(options);
 
         this.rootNeuron = null;
 
@@ -82,7 +78,7 @@ class ConnectionTool extends Tool {
 
     display() {
         if (this.rootNeuron) {
-            stroke(...connectionColor);
+            stroke(...Connections.colors["empty"]);
             line(this.rootNeuron.getX(), this.rootNeuron.getY(), mouseX, mouseY);
         }
     }
@@ -97,11 +93,17 @@ class ConnectionTool extends Tool {
             if (!this.rootNeuron && event.neuron.canConnectFrom) {
                 this.rootNeuron = event.neuron;
                 return;
-            } 
+            }
 
             // Create connection if the second neuron was clicked and prevent double connections
-            if (this.rootNeuron && event.neuron.canConnectTo && !connectionExisits(this.rootNeuron, event.neuron)) { 
-                connections.push(new Connection(this.rootNeuron, event.neuron, 100)); // TODO change inital weight
+            if (this.rootNeuron && event.neuron.canConnectTo && !connectionExisits(this.rootNeuron, event.neuron)) {
+                let options = {
+                    neuronA: this.rootNeuron,
+                    neuronB: event.neuron,
+                    weight: 100,  // TODO change inital weight
+                }
+                Connections.add(options);
+
                 this.rootNeuron = null;
                 return;
             }
@@ -110,9 +112,30 @@ class ConnectionTool extends Tool {
 }
 
 class HandTool extends Tool {
-    constructor(options) {
-        super();
+    constructor(options = {}) {
+        super(options);
         cursor(ARROW);
+    }
+
+    handleClick(event) {
+        if (event.ctrlKey) { // Deletion when clicked with ctrl key held
+            if (event.neuron) {
+                Neurons.remove(event.neuron);
+            } else if (event.connection) {
+                Connections.remove(event.connection);
+            }
+
+        }
+    }
+
+    handleDrag(event) {
+        if (!event.ctrlKey) { // Normal Action without ctrl key held
+            if (event.neuron) {
+                event.neuron.move(event.movementX, event.movementY);
+            } else if (event.connection) {
+                // TODO maybe bend connections?
+            }
+        }
     }
 }
 // ----------
