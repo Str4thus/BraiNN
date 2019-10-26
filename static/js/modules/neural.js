@@ -1,12 +1,27 @@
 console.log("Neural Module loaded");
 
+
+// -------------
+// -  General  -
+// -------------
+let neuronRadius = 25;
+// -------------
+
+
+
+// -------------
+// -  Colours  -
+// -------------
 let neuronColors = {
     "input": [234, 232, 103],
     "hidden": [104, 214, 108],
     "output": [247, 158, 64],
 }
+let connectionColor = [240];
+let connectionArrowColor = [0];
+// -------------
 
-let neuronRadius = 25;
+
 
 // -------------
 // -  Neurons  -
@@ -18,6 +33,9 @@ class Neuron {
         this.y = y;
         this.r = neuronRadius;
         this.color = color;
+
+        this.canConnectTo = true;
+        this.canConnectFrom = true;
     }
 
     display() {
@@ -54,6 +72,8 @@ class Neuron {
 class InputNeuron extends Neuron {
     constructor(x, y) {
         super(x, y, color(...neuronColors["input"]));
+
+        this.canConnectTo = false;
     }
 }
 
@@ -66,9 +86,13 @@ class HiddenNeuron extends Neuron {
 class OutputNeuron extends Neuron {
     constructor(x, y) {
         super(x, y, color(...neuronColors["output"]));
+
+
+        this.canConnectFrom = false;
     }
 }
 // -------------
+
 
 
 // ----------------
@@ -90,19 +114,12 @@ class Connection {
         } else {
             connectionDict[this.neuronA.id] = [this.neuronB.id]
         }
-
-        // Update neuronB.id key of connection dict
-        if (connectionDict[this.neuronB.id]) {
-            connectionDict[this.neuronB.id] = [...connectionDict[this.neuronB.id], this.neuronA.id]
-        } else {
-            connectionDict[this.neuronB.id] = [this.neuronA.id]
-        }
     }
 
     display() {
-        let sw = constrain(abs(this.weight) * 3, 0.1, 15); // Clamp line thickness
+        let sw = constrain(abs(this.weight) * 3, 2, 15); // Clamp line thickness
         strokeWeight(sw); // Thicker line -> higher absolute value of the weight
-        stroke(0);
+        stroke(...connectionColor);
         noFill();
 
         if (this.isRecurrent) {
@@ -111,7 +128,38 @@ class Connection {
                 this.neuronA.getX() + this.neuronA.getRadius() * .8, this.neuronA.getY(),
                 this.neuronA.getX() + this.neuronA.getRadius() * .1, this.neuronA.getY() + this.neuronA.getRadius() * 20);
         } else {
-            line(this.neuronA.getX(), this.neuronA.getY(), this.neuronB.getX(), this.neuronB.getY());
+            angleMode(RADIANS);
+            // Line values
+            let p1 = { x: this.neuronA.getX(), y: this.neuronA.getY() }
+            let p2 = { x: this.neuronB.getX(), y: this.neuronB.getY() }
+            let middleX = p1.x + ((p2.x - p1.x) / 2);
+            let middleY = p1.y + ((p2.y - p1.y) / 2);
+            let length = dist(p1.x, p1.y, p2.x, p2.y);
+
+            // Arrow values
+            let arrowMinLength = 2;
+            let arrowMaxLength = 40;
+            let arrowLength = constrain(length * 0.3, arrowMinLength, arrowMaxLength);
+            let baseSideLengthOfArrow = 30;
+            let angle = atan((p2.y - p1.y) / (p2.x - p1.x));
+            
+            if (p1.x > p2.x) { // Correct atan result, if necessary
+                angle += PI;
+            }
+
+            // Draw line
+            line(p1.x, p1.y, p2.x, p2.y);
+            
+            // Rotate and draw the direction arrow
+            push();
+            strokeWeight(1);
+            stroke(...connectionArrowColor);
+            fill(...connectionArrowColor);
+
+            translate(middleX, middleY);
+            rotate(angle);
+            triangle(arrowLength / 2, 0, -arrowLength / 2, baseSideLengthOfArrow / 2, -arrowLength / 2, -baseSideLengthOfArrow / 2);
+            pop();
         }
     }
 }

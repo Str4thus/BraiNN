@@ -53,8 +53,13 @@ function getHoveredNeuron() {
 }
 
 function connectionExisits(neuronA, neuronB) {
-    if (connectionDict[neuronA.id]) {
-        return connectionDict[neuronA.id].includes(neuronB.id);
+    if (connectionDict[neuronA.id] && connectionDict[neuronA.id].includes(neuronB.id)) {
+        return true;
     }
+
+    if (connectionDict[neuronB.id] && connectionDict[neuronB.id].includes(neuronA.id)) {
+        return true;
+    }
+
     return false;
 }

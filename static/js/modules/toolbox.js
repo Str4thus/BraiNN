@@ -82,6 +82,7 @@ class ConnectionTool extends Tool {
 
     display() {
         if (this.rootNeuron) {
+            stroke(...connectionColor);
             line(this.rootNeuron.getX(), this.rootNeuron.getY(), mouseX, mouseY);
         }
     }
@@ -92,11 +93,17 @@ class ConnectionTool extends Tool {
         }
 
         if (event.neuron) {
-            if (!this.rootNeuron) {
+            // Set neuron from which the connection begins
+            if (!this.rootNeuron && event.neuron.canConnectFrom) {
                 this.rootNeuron = event.neuron;
-            } else if (!connectionExisits(this.rootNeuron, event.neuron)) { // Create connection if the second neuron was clicked and prevent double connections
-                connections.push(new Connection(this.rootNeuron, event.neuron, 1)); // TODO change inital weight
+                return;
+            } 
+
+            // Create connection if the second neuron was clicked and prevent double connections
+            if (this.rootNeuron && event.neuron.canConnectTo && !connectionExisits(this.rootNeuron, event.neuron)) { 
+                connections.push(new Connection(this.rootNeuron, event.neuron, 100)); // TODO change inital weight
                 this.rootNeuron = null;
+                return;
             }
         }
     }
