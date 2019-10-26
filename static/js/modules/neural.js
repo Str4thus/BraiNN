@@ -38,6 +38,10 @@ class Neuron {
         this.y = y;
     }
 
+    getRadius() {
+        return this.r;
+    }
+
     getX() {
         return this.x + xoff;
     }
@@ -78,6 +82,7 @@ class Connection {
         this.neuronA = neuronA;
         this.neuronB = neuronB;
         this.weight = weight;
+        this.isRecurrent = neuronA.id == neuronB.id;
 
         // Update neuronA.id key of connection dict
         if (connectionDict[this.neuronA.id]) {
@@ -98,7 +103,15 @@ class Connection {
         let sw = constrain(abs(this.weight) * 3, 0.1, 15); // Clamp line thickness
         strokeWeight(sw); // Thicker line -> higher absolute value of the weight
         stroke(0);
+        noFill();
 
-        line(this.neuronA.getX(), this.neuronA.getY(), this.neuronB.getX(), this.neuronB.getY());
+        if (this.isRecurrent) {
+            curve(this.neuronA.getX() - this.neuronA.getRadius() * .1, this.neuronA.getY() + this.neuronA.getRadius() * 20,
+                this.neuronA.getX() - this.neuronA.getRadius() * .8, this.neuronA.getY(),
+                this.neuronA.getX() + this.neuronA.getRadius() * .8, this.neuronA.getY(),
+                this.neuronA.getX() + this.neuronA.getRadius() * .1, this.neuronA.getY() + this.neuronA.getRadius() * 20);
+        } else {
+            line(this.neuronA.getX(), this.neuronA.getY(), this.neuronB.getX(), this.neuronB.getY());
+        }
     }
 }
