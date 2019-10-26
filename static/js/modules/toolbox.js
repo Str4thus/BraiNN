@@ -125,6 +125,12 @@ class HandTool extends Tool {
                 Connections.remove(event.connection);
             }
 
+        } else {
+            if (event.neuron) {
+                console.log(event.neuron);
+            } else if (event.connection) {
+                console.log(event.connection);
+            }
         }
     }
 
