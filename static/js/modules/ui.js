@@ -80,9 +80,7 @@ class Neuron extends UIElement {
         this.y += y;
     }
 
-    remove() {
-        console.log("remove neuron!");
-    }
+    remove() { }
 }
 
 class InputNeuron extends Neuron {
@@ -193,8 +191,6 @@ class Connection extends UIElement {
     }
 
 
-    remove() {
-        console.log("remove connection!");
-    }
+    remove() { }
 }
 // ----------------

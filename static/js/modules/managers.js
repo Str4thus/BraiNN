@@ -33,7 +33,17 @@ class Neurons {
     }
 
     static remove(neuron) {
-        console.log("Neuron removed!");
+        let index = Neurons.neurons.indexOf(neuron);
+        Neurons.neurons.splice(index, 1);
+
+        let allConnections = Connections.connections;
+        for (let i = 0; i < allConnections.length; i++) {
+            if (allConnections[i].neuronA.id == neuron.id || allConnections[i].neuronB.id == neuron.id) {
+                Connections.remove(allConnections[i]);
+            }
+        }
+
+        neuron.remove();
     }
 
     static get(index) {
@@ -62,7 +72,17 @@ class Connections {
     }
 
     static remove(connection) {
-        console.log("Connection removed!");
+        let index = Connections.connections.indexOf(connection);
+        Connections.connections.splice(index, 1);
+
+        let connectionsOfNeuronA = Connections.connectionDict[connection.neuronA.id];
+        connectionsOfNeuronA.splice(connectionsOfNeuronA.indexOf(connection.neuronB.id), 1);
+        
+        if (connectionsOfNeuronA.length == 0) {
+            delete Connections.connectionDict[connection.neuronA.id];
+        }
+        
+        connection.remove();
     }
 
     static get(index) {

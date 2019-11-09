@@ -21,17 +21,28 @@
         <div id="toolbox" class="collapse show" data-parent="#toolbox-wrapper">
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="Neurons">
-                    <button type="button" class="btn btn-info" onclick="ToolBox.select(NeuronTool, {neuronType: 'input'});">Input</button>
-                    <button type="button" class="btn btn-info" onclick="ToolBox.select(NeuronTool, {neuronType: 'hidden'});">Hidden</button>
-                    <button type="button" class="btn btn-info" onclick="ToolBox.select(NeuronTool, {neuronType: 'output'});">Output</button>
+                    <button type="button" class="btn btn-info"
+                        onclick="ToolBox.select(NeuronTool, {neuronType: 'input'});">Input</button>
+                    <button type="button" class="btn btn-info"
+                        onclick="ToolBox.select(NeuronTool, {neuronType: 'hidden'});">Hidden</button>
+                    <button type="button" class="btn btn-info"
+                        onclick="ToolBox.select(NeuronTool, {neuronType: 'output'});">Output</button>
                 </div>
                 <div class="btn-group mr-2" role="group" aria-label="General">
-                    <button type="button" class="btn btn-info" onclick="ToolBox.select(ConnectionTool);">Connection</button>
+                    <button type="button" class="btn btn-info"
+                        onclick="ToolBox.select(ConnectionTool);">Connection</button>
                     <button type="button" class="btn btn-info" onclick="ToolBox.select(null);">Hand</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="appWrapper"></div>
+    <div id="main">
+        <div id="appWrapper"></div>
+
+        <div id="detail-panel">
+            <h1> Details!</h1>
+            <input name="yeet" value="ya yeet!">
+        </div>
+    </div>
 </body>

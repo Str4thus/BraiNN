@@ -2,8 +2,20 @@
     margin-left: 2vw;
     margin-top: 1vh;
 
-    width: 96vw;
+    width: 70vw;
     height: 82vh;
+    
+    float: left;
+}
+
+#detail-panel {
+    margin-top: 1vh;
+    margin-right: 2vw;
+
+    width: 25vw;
+    height: 82vh;
+
+    float: left;
 }
 
 #toolbox-toggle {
