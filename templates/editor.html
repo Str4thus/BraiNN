@@ -4,6 +4,7 @@
     <script src="/static/js/modules/ui.js"></script>
     <script src="/static/js/modules/toolbox.js"></script>
     <script src="/static/js/modules/managers.js"></script>
+    <script src="/static/js/modules/detailview.js"></script>
     <script src="/static/js/modules/ai.js"></script>
 
     <script src="/static/js/main.js"></script>
@@ -41,8 +42,9 @@
         <div id="appWrapper"></div>
 
         <div id="detail-panel">
-            <h1> Details!</h1>
-            <input name="yeet" value="ya yeet!">
+            <h1 class="text-center"> Details</h1>
+            <div id="details"> </div>
+            <button id='yeet' onclick="DetailView.updateElement();"> Submit! </button>
         </div>
     </div>
 </body>

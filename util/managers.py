@@ -17,7 +17,6 @@ class HtmlManager:
         end_index = self._index_of_string(substitute_list, end_substitute)
 
         if (begin_index != -1 and end_index != -1):
-            print(wildcard_index, begin_index, end_index)
             wildcard_list = wildcard_list[: wildcard_index] + substitute_list[begin_index + 1 : end_index] + wildcard_list [wildcard_index + 1 :]
         else:
             if (wildcard_index != -1):

@@ -31,7 +31,7 @@ function mouseDragged(event) {
 
         ToolBox.currentTool.handleDrag(event);
     }
-
+    
     return false;
 }
 
@@ -51,10 +51,10 @@ function mouseClicked(event) {
             break;
     }
 
-    if (!event.shiftKey) {
+    if (!event.shiftKey) { // ShiftKey + Click lets you drag the world
         ToolBox.currentTool.handleClick(event);
     }
-
+    
     return false;
 }
 // --------------------

@@ -50,6 +50,15 @@ class Neurons {
         return Neurons.neurons[index];
     }
 
+    static getNeuronById(id) {
+        for (let i = 0; i < Neurons.neurons.length; i++) {
+            if (Neurons.neurons[i].id == id) {
+                return Neurons.neurons[i];
+            }
+        }
+
+        return null;
+    }
 }
 
 class Connections {

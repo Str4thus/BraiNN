@@ -115,9 +115,16 @@ class HandTool extends Tool {
     constructor(options = {}) {
         super(options);
         cursor(ARROW);
+
+        this.wasDragged = false; // Used for preventing click event after a drag event 
     }
 
     handleClick(event) {
+        if (this.wasDragged) { // Prevent Click Event after Drag Event
+            this.wasDragged = false;
+            return;
+        }
+
         if (event.ctrlKey) { // Deletion when clicked with ctrl key held
             if (event.neuron) {
                 Neurons.remove(event.neuron);
@@ -127,14 +134,16 @@ class HandTool extends Tool {
 
         } else {
             if (event.neuron) {
-                console.log(event.neuron);
+                DetailView.display(event.neuron);
             } else if (event.connection) {
-                console.log(event.connection);
+                DetailView.display(event.connection);
             }
         }
     }
 
     handleDrag(event) {
+        this.wasDragged = true;
+
         if (!event.ctrlKey) { // Normal Action without ctrl key held
             if (event.neuron) {
                 event.neuron.move(event.movementX, event.movementY);
